@@ -14,7 +14,6 @@
     <button type="button" class="btn-movimento" @click="addPage">
       <img src="../assets/images/freccia.png" id="freccia">
     </button>
-    <button type="button" class="btn btn-primary" @click="leggi()"> premi </button>
 </template>
 
 <script>

@@ -1,12 +1,12 @@
 <template>
     <div >
-      <div v-for="film in populars.results" key="id">
+      <div v-for="film in populars.results" :key="film.id">
         <div class="card " style="width: 18rem;">
           <img :src="setImmagine(film.poster_path)" class="card-img-top">
           <div class="card-body">
             <h5 class="card-title"> {{film.name}}</h5>
             <p class="card-text"> {{setDettagli(film.release_date)}}</p>
-            <a class="btn btn-success card-button card-button" href="#" role="button"> <h5> {{profileButton}}</h5> </a>
+            <router-link :to="{name: 'filmsDetails', params:{id: film.id}}" class="btn btn-success card-button"> <h5> {{this.profileButton}} </h5></router-link>
           </div>
         </div>
       </div>
@@ -48,7 +48,6 @@
                     this.populars.page=data.page
                     this.populars.total_pages=data.total_pages
                     this.populars.total_results=data.total_results
-                    console.log(data)
                 })
                 .catch(err => console.log(err.message))
             },
@@ -85,10 +84,10 @@
                     alert("sono già state caricate tutte le pagine")
                 }
             },
-            traduci(lingua)
+            traduci()
             {
                 console.log("entrato")
-                if(lingua=="it-IT")
+                if(this.language=="it-IT")
                 {
                     console.log("traduzione in italiano")
                     this.profileButton="vai al profilo del film"
@@ -119,7 +118,6 @@
         created()
         {
             this.getData()
-            this.traduci()
         },
         watch:
         {
@@ -127,7 +125,7 @@
             {
                 console.log("ricevuto")
                 this.language=to.query.lang
-                this.traduci(this.language)
+                this.traduci()
             }
         }
     }
