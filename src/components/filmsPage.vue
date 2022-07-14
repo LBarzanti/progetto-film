@@ -1,4 +1,12 @@
 <template>
+    <div class="search-bar">
+        <input class="form-control me-2" v-model="myInput">
+        <button class="btn btn-outline-success btn-warning" @click="cerca()" role="submit">Search</button>
+        <div class="check">
+            <span>{{sensibili}}</span>
+            <input v-model="checked" type="checkbox" name="adult-mode"/>
+        </div>
+    </div>
     <div >
       <div v-for="film in populars.results" :key="film.id">
         <div class="card " style="width: 18rem;">
@@ -34,7 +42,11 @@
                 },
                 popoverControll:false,
                 profileButton:"vai al profilo del film",
-                dettagli:"è stato pubblicato in data: "
+                dettagli:"è stato pubblicato in data: ",
+                myInput:"",
+                search:"",
+                checked:false,
+                sensibili:"mostra risultati sensibili"
             }
         },
         methods: {
@@ -92,6 +104,7 @@
                     console.log("traduzione in italiano")
                     this.profileButton="vai al profilo del film"
                     this.dettagli="è stato pubblicato in data: "
+                    this.sensibili="mostra risultati sensibili"
                     this.populars={
                         page:1,
                         results:[],
@@ -105,6 +118,7 @@
                     console.log("traduzione in inglese")
                     this.profileButton="go to the film profile"
                     this.dettagli="was published on: "
+                    this.sensibili="shows sensitive results"
                     this.populars={
                         page:1,
                         results:[],
@@ -112,6 +126,39 @@
                         total_results:0
                     }
                     this.getData()
+                }
+            },
+            cerca()
+            {
+                this.search=this.myInput
+                if (this.search=="") 
+                {
+                    this.populars=
+                    {
+                        page:1,
+                        results:[],
+                        total_pages:0,
+                        total_results:0
+                    }
+                    this.getData()    
+                }
+                else
+                {
+                    this.populars=
+                    {
+                        page:1,
+                        results:[],
+                        total_pages:0,
+                        total_results:0
+                    }
+                    fetch(`https://api.themoviedb.org/3/search/movie?api_key=6f9286d54de4891ea7a5c91779e09786&language=${this.language}&query=${this.search}&page=${this.pages}&include_adult=${this.checked}`)
+                    .then(res => res.json() )
+                    .then(data => 
+                    {
+                        this.populars.results = data.results
+                        console.log(this.populars)
+                    })
+                    .catch(err => console.log(err.message))
                 }
             }
         },
@@ -131,3 +178,25 @@
     }
     
 </script>
+
+<style>
+    .form-control
+    {
+        margin-left: 23%;
+        float: left;
+        width: 50%;
+    }
+    .search-bar
+    {
+        margin-top: 0.5%;
+        color: white;
+    }
+    .check
+    {
+        text-align: center;
+    }
+    .check span
+    {
+        margin: 0.5%;
+    }
+</style>

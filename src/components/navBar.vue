@@ -9,11 +9,11 @@
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                {{ sezione() }}
+                {{ sezione }}
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <li>
-                  <button class="dropdown-item button" v-on:click=" switchSection "> {{ opzione() }} </button>
+                  <button class="dropdown-item button" v-on:click=" switchSection "> {{ opzione }} </button>
                 </li>
               </ul>
             </li>
@@ -28,14 +28,6 @@
               </ul>
             </li>
           </ul>
-          <form class="d-flex" role="search" v-if="language==1">
-            <input class="form-control me-2" type="search" placeholder="Cerca" aria-label="Search">
-            <button class="btn btn-outline-success btn-warning" type="submit"> cerca </button>
-          </form>
-          <form class="d-flex" role="search" v-else>
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success btn-warning" type="submit"> search </button>
-          </form>
         </div>
       </div>
     </nav>
@@ -47,45 +39,36 @@
       {
         return{
             section:true,
-            language:true
+            language:true,
+            myInput:"",
+            search:""
         }
       },
     methods:{
       switchSection()
       {
+        console.log("eccolo")
         this.section= !this.section
         const path=this.section ? '/film' : '/serie'
         this.$router.push(path)
       },
       switchLang()
       {
+        
         this.language = !this.language
         const query=this.language ? 'it-IT' : 'en-US'
         this.$router.replace({ query: {lang:query} })
       },
-      sezione(){
-        if (this.section) {
-          return 'FILM'
-        }
-        else
-        {
-          return 'SERIE TV'
-        }
-      },
-      opzione(){
-        if (this.section) {
-          return 'SERIE TV'
-        }
-        else
-        {
-          return 'FILM'
-        }
+      cerca()
+      {
+        this.search=this.myInput
+        
       }
     },
     computed:{
       lingua()
       {
-        if (this.language==true) 
+        if (this.language === true) 
         {
           return 'italiano'  
         }
@@ -96,7 +79,7 @@
       },
       lingua2()
       {
-        if (this.language==true) 
+        if (this.language === true) 
         {
           return 'english'  
         }
@@ -105,7 +88,24 @@
           return 'italiano'
         }
       },
-      
+      sezione(){
+        if (this.section === true) {
+          return 'FILM'
+        }
+        else
+        {
+          return 'SERIE TV'
+        }
+      },
+      opzione(){
+        if (this.section  === true) {
+          return 'SERIE TV'
+        }
+        else
+        {
+          return 'FILM'
+        }
+      },
     },
 
     }

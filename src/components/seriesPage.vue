@@ -1,5 +1,13 @@
 <template>
-    <div >
+    <div class="search-bar">
+        <input class="form-control me-2" v-model="myInput">
+        <button class="btn btn-outline-success btn-warning" @click="cerca()" role="submit">Search</button>
+        <div class="check">
+            <span>{{sensibili}}</span>
+            <input v-model="checked" type="checkbox" name="adult-mode"/>
+        </div>
+    </div>
+    <div>
       <div v-for="serie in populars.results" key="id">
         <div class="card " style="width: 18rem;">
           <img :src="setImmagine(serie.poster_path)" class="card-img-top">
@@ -33,7 +41,11 @@
           popoverControll:false,
           profileButton:"vai al profilo della serie",
           language:"",
-          dettagli:"la prima apparizione in tv è avvenuta in data: "
+          dettagli:"la prima apparizione in tv è avvenuta in data: ",
+          myInput:"",
+          search:"",
+          checked:false,
+          sensibili:"mostra risultati sensibili"
         }
       },
       methods: 
@@ -70,15 +82,6 @@
             return "la prima apparizione in tv è avvenuta in data: " + first_air_date
           }
         },
-        openPopover()
-        {
-          if(this.popoverControll==false)
-          {
-            const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
-            const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
-            this.popoverControll=true
-          }
-        },
         addPage()
         {
           if (this.pages < this.populars.total_pages) 
@@ -102,6 +105,7 @@
             console.log("traduzione in italiano")
             this.profileButton="vai al profilo della serie"
             this.dettagli="la prima apparizione in tv è avvenuta in data: "
+            this.sensibili="mostra risultati sensibili"
             this.populars=
             {
               page:1,
@@ -116,6 +120,7 @@
             console.log("traduzione in inglese")
             this.profileButton="go to the series profile"
             this.dettagli="the first appearance on tv took place on: "
+            this.sensibili="shows sensitive results"
             this.populars=
             {
               page:1,
@@ -126,10 +131,42 @@
             this.getData()
           }
         },
-        leggi()
+        cerca()
         {
-          console.log(this.$router)
-        }
+          this.search=this.myInput
+          if (this.search=="") 
+          {
+            this.populars=
+          {
+              page:1,
+              results:[],
+              total_pages:0,
+              total_results:0
+            }
+            this.getData()    
+          }
+          else
+          {
+            this.populars=
+            {
+              page:1,
+              results:[],
+              total_pages:0,
+              total_results:0
+            }
+            fetch(`https://api.themoviedb.org/3/search/tv?api_key=6f9286d54de4891ea7a5c91779e09786&language=${this.language}&page=${this.pages}&query=${this.search}&include_adult=${this.checked}`)
+            .then(res => res.json() )
+            .then(data => 
+            {
+              this.populars.results = this.populars.results.concat(data.results)
+              this.populars.page=data.page
+              this.populars.total_pages=data.total_pages
+              this.populars.total_results=data.total_results
+              console.log(this.populars)
+            })
+            .catch(err => console.log(err.message))
+          }
+        },
       },
       created()
       {

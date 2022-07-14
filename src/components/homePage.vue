@@ -1,6 +1,5 @@
 <template>
-    <br><br><br><br><br><br><br><br>
-    <div>
+        <br><br><br><br><br><br><br><br>
         <div class="div-immagini float-start">
             <img src="../assets/images/PopCorn.jpg" class="img">
         </div>
@@ -15,7 +14,6 @@
         <div class="div-immagini float-start">
             <img src="../assets/images/PopCorn.jpg" class="img">
         </div>
-    </div>
 </template>
 
 <script>
@@ -32,7 +30,11 @@ import { thisExpression } from '@babel/types'
                 film:"FILM",
                 serie:"SERIE",
                 filmPath:"/film?lang=it-IT",
-                seriesPath:"/serie?lang=it-IT"
+                seriesPath:"/serie?lang=it-IT",
+                myInput:"",
+                search:"",
+                checked:false,
+                sensibili:"mostra risultati sensibili",
             }
         },
         methods:
@@ -48,6 +50,7 @@ import { thisExpression } from '@babel/types'
                     this.serie="SERIE"
                     this.filmPath="/film?lang=it-IT"
                     this.seriesPath="/serie?lang=it-IT"
+                    this.sensibili="mostra risultati sensibili"
                 }
                 else
                 {
@@ -58,8 +61,10 @@ import { thisExpression } from '@babel/types'
                     this.serie="SERIES"
                     this.filmPath="/film?lang=en-US"
                     this.seriesPath="/serie?lang=en-US"
+                    this.sensibili="shows sensitive results"
                 }
-            }
+            },
+            
         },
         watch:
         {

@@ -133,7 +133,7 @@
     .backdrop
     {
         float: left;
-        width: 44%;
+        width: 39%;
     }
     .immagine
     {
