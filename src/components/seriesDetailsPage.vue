@@ -12,7 +12,22 @@
             </ul>
         </div>
         <img src="../assets/images/no18.png" v-if="serie.adult" class="iconcine">
-        <span class="iconcine"> {{serie.vote_average}} </span>
+        <span class="iconcine">
+            {{this.stelle}}  
+        </span>
+        <font-awesome-icon icon="star" v-if="stelle>=1"/>
+        <font-awesome-icon icon="star-half-stroke" v-else-if="stelle>=0.5" />
+        <font-awesome-icon icon="star" v-if="stelle>=2" />
+        <font-awesome-icon icon="star-half-stroke" v-else-if="stelle>=1.5"/>
+        <font-awesome-icon icon="star" v-if="stelle>=3"/>
+        <font-awesome-icon icon="star-half-stroke" v-else-if="stelle>=2.5"/>
+        <font-awesome-icon icon="star" v-if="stelle>=4"/>
+        <font-awesome-icon icon="star-half-stroke" v-else-if="stelle>=3.5"/>
+        <font-awesome-icon icon="star" v-if="stelle>=5"/>
+        <font-awesome-icon icon="star-half-stroke" v-else-if="stelle>=4.5"/>
+        
+        
+        
                 <br><br>
                 <div class="descrizione">
                     {{this.serie.overview}}
@@ -38,7 +53,7 @@
 </template>
 
 <script>
-
+    
     export default 
     {
         data() 
@@ -46,13 +61,14 @@
             return{
                 serie:{},
                 id:this.$route.params.id,
-                language:"it-IT",
+                language:null,
                 testoPulsante:"seleziona stagione",
                 imagePath:"",
                 backdropPath:"",
                 producer:" creato da: ",
                 disponibilità:" immagine non disponibile",
-                genere:" generi: "
+                genere:" generi: ",
+                stelle:0
             }
         },
         methods: 
@@ -61,18 +77,20 @@
             {
                 fetch(`https://api.themoviedb.org/3/tv/${this.id}?api_key=6f9286d54de4891ea7a5c91779e09786&language=${this.language}`)
                 .then(res => res.json() )
-                .then(data => this.serie = data)
+                .then(data => {
+                    this.serie = data
+                    this.stelle=this.serie.vote_average/2
+                    console.log(this.stelle)
+                })
                 .then(data => console.log(this.serie))
                 .catch(err => console.log(err.message))
+                
             },
-            traduci(lingua)
+            traduci()
             {
-                console.log("entrato")
-                if (lingua=="it-IT") 
+                if (this.language=="it-IT") 
                 {
-                    console.log("traduzione in italiano")
                     this.testoPulsante="seleziona stagione"
-                    this.language="it-IT"
                     this.producer="creato da: "
                     this.disponibilità="immagine non disponibile"
                     this.genere="genere: "
@@ -80,9 +98,7 @@
                 }
                 else
                 {
-                    console.log("traduzione in inglese")
                     this.testoPulsante="select season"
-                    this.language="en-US"
                     this.producer="created by: "
                     this.disponibilità="image not available"
                     this.genere="genres: "
@@ -109,9 +125,18 @@
         {
             $route (to, from)
             {
-                console.log("arrivato")
-                this.language=to.query.lang
-                this.traduci(this.language)
+                if(to && to.query && from && from.query) 
+                {
+                    if (to.query.lang==from.query.lang) 
+                    {
+                        return null
+                    }
+                    else
+                    {
+                        this.language=to.query.lang
+                        this.traduci()
+                    }
+                }
             }
         }
     }
@@ -162,5 +187,9 @@
         width: 100px;
         color: black;
         margin-bottom: 5px;
+    }
+    .stelle
+    {
+        width: 25px;
     }
 </style>

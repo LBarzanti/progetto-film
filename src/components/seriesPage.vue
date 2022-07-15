@@ -14,7 +14,7 @@
           <div class="card-body">
             <h5 class="card-title"> {{serie.name}}</h5>
             <p class="card-text"> {{this.dettagli + serie.first_air_date}}</p>
-            <router-link :to="{name: 'seriesDetails', params:{id: serie.id}}" class="btn btn-success card-button"> <h5> {{this.profileButton}} </h5></router-link>
+            <router-link :to="{name: 'seriesDetails', params:{id: serie.id}, query:{lang: language}}" class="btn btn-success card-button"> <h5> {{this.profileButton}} </h5></router-link>
           </div>
         </div>
       </div>
@@ -40,7 +40,7 @@
           },
           popoverControll:false,
           profileButton:"vai al profilo della serie",
-          language:"",
+          language:this.$route.query.lang,
           dettagli:"la prima apparizione in tv è avvenuta in data: ",
           myInput:"",
           search:"",
@@ -97,10 +97,9 @@
             }
           }
         },
-        traduci(lingua)
+        traduci()
         {
-          console.log("entrato")
-          if(lingua=="it-IT")
+          if(this.$route.query.lang=="it-IT")
           {
             console.log("traduzione in italiano")
             this.profileButton="vai al profilo della serie"
@@ -171,14 +170,24 @@
       created()
       {
         this.getData()
+        this.traduci()
       },
       watch:
       {
         $route (to, from)
         {
-          console.log("ricevuto")
-          this.language=to.query.lang
-          this.traduci(this.language)
+          if(to.query && from.query) 
+          {
+            if (to.query.lang==from.query.lang) 
+            {
+              return null
+            }
+            else
+            {
+              this.language=to.query.lang
+              this.traduci()
+            }
+          }
         }
       }
   }

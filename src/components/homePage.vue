@@ -57,7 +57,7 @@ import { thisExpression } from '@babel/types'
                     console.log("traduzione in inglese")
                     this.welcome="Welcome to The Film Place"
                     this.subTitle="Here you can find the best movies and the best TV series for your marathons"
-                    this.film="FILMS"
+                    this.film="MOVIES"
                     this.serie="SERIES"
                     this.filmPath="/film?lang=en-US"
                     this.seriesPath="/serie?lang=en-US"
@@ -68,11 +68,16 @@ import { thisExpression } from '@babel/types'
         },
         watch:
         {
-            $route (to, from)
+            '$route.query.lang':
             {
-                console.log("ricevuto")
-                this.language=to.query.lang
+                handler: function(language) {
+                console.log(language)
+                this.language=language
                 this.traduci(this.language)
+                },
+                deep: true,
+                immediate: true
+            
             }
         }
     }

@@ -1,17 +1,14 @@
 <template>
-    <NavBar></NavBar>
     <filmsPage></filmsPage>
 </template>
 
 <script>
-    import NavBar from '@/components/navBar.vue'
-    import filmsPage from "../components/filmsPage.vue"
-
+    import filmsPage from '../components/filmsPage'
     export default {
         name: 'filmsView',
         components: 
         {
-            NavBar, filmsPage
+            filmsPage
         },
         methods:
         {

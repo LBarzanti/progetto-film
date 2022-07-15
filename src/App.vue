@@ -1,14 +1,19 @@
 <template>
+  <nav-bar/>
   <router-view/>
 </template>
 <script>
+  import NavBar from '@/components/navBar.vue'
   export default 
   {
+    components:
+    {
+      NavBar
+    },
     data()
     {
       return{
-        section:true,
-        language:true
+        
       }
     },
     methods:

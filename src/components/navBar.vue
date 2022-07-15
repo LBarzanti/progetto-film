@@ -1,61 +1,58 @@
 <template>
     <nav class="navbar navbar-expand-lg bg-primary">
       <div class="container-fluid">
-        <router-link class="navbar-brand" to="/">THE FILM PLACE</router-link>
+        <router-link class="navbar-brand" :to="'/' + '?lang=' + this.$route.query.lang">THE FILM PLACE</router-link>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                {{ sezione }}
-              </a>
-              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li>
-                  <button class="dropdown-item button" v-on:click=" switchSection "> {{ opzione }} </button>
-                </li>
-              </ul>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                {{ lingua }}
-              </a>
-              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li>
-                  <button class="dropdown-item button" v-on:click=" switchLang "> {{ lingua2 }} </button>
-                </li>
-              </ul>
-            </li>
-          </ul>
+          <span class="leg" v-if="isNotHomePage"> {{ serie }} </span>
+          <Toggle v-if="isNotHomePage" v-model="section" @change="switchSection" class="toggle-yellow-blue"/>
+          <span v-if="isNotHomePage" class="leg dividi"> {{film}} </span>
+
+          <span class="leg"> {{ eng }} </span>
+          <Toggle v-model="language" @change="switchLang" class="toggle-yellow-blue"/>
+          <span class="leg"> {{ ita }} </span>
         </div>
       </div>
     </nav>
 </template>
 
 <script>
+  import Toggle from '@vueform/toggle'
     export default{
+      components:{
+        Toggle
+      },
       data()
       {
         return{
-            section:true,
-            language:true,
+            section:null,
+            language:null,
             myInput:"",
-            search:""
+            search:"",
+            serie:"serie tv",
+            film:"film",
+            ita:"italiano",
+            eng:"inglese"
+        }
+      },
+      computed:{
+        isNotHomePage() {
+          return this.$route.path !== '/'
         }
       },
     methods:{
       switchSection()
       {
-        console.log("eccolo")
-        this.section= !this.section
-        const path=this.section ? '/film' : '/serie'
-        this.$router.push(path)
+        if (this.section !== null || this.$route.path !== '/') 
+        {
+          const path=this.section ? '/film' : '/serie'
+          this.$router.replace(path + "/" + "?lang=" + this.$route.query.lang)
+        }
       },
       switchLang()
       {
-        
-        this.language = !this.language
         const query=this.language ? 'it-IT' : 'en-US'
         this.$router.replace({ query: {lang:query} })
       },
@@ -63,50 +60,63 @@
       {
         this.search=this.myInput
         
+      },
+      traduci()
+      {
+        if (this.$route.query.lang==="it-IT" || this.$route.query.lang == undefined) 
+        {
+          this.eng="inglese"
+          this.ita="italiano"
+          this.serie="serie tv"
+          this.film="film"
+          this.language=true
+          this.switchLang()
+        }
+        else
+        {
+          this.eng="english"
+          this.ita="italian"
+          this.serie="tv series"
+          this.film="movies"
+          this.language=false
+          this.switchLang()
+        }
       }
     },
-    computed:{
-      lingua()
-      {
-        if (this.language === true) 
-        {
-          return 'italiano'  
-        }
-        else
-        {
-          return 'english'  
-        }
-      },
-      lingua2()
-      {
-        if (this.language === true) 
-        {
-          return 'english'  
-        }
-        else
-        {
-          return 'italiano'
-        }
-      },
-      sezione(){
-        if (this.section === true) {
-          return 'FILM'
-        }
-        else
-        {
-          return 'SERIE TV'
-        }
-      },
-      opzione(){
-        if (this.section  === true) {
-          return 'SERIE TV'
-        }
-        else
-        {
-          return 'FILM'
-        }
-      },
+    created()
+    {
+      this.traduci()
     },
-
+    watch:
+    {
+      '$route.query.lang':
+            {
+              handler: function(language) {
+                this.traduci()
+              },
+              deep: false,
+              immediate: true
+            
+            }
     }
+  }
 </script>
+<style src="@vueform/toggle/themes/default.css"/>
+<style scoped>
+.leg
+{
+  color: white;
+  margin: 0px 15px;
+}
+.dividi
+{
+  margin-right: 50px
+}
+.toggle-yellow-blue
+{
+  --toggle-bg-on: yellow;
+  --toggle-border-on: yellow;
+  --toggle-bg-off: blue;
+  --toggle-border-off: blue;
+}
+</style>

@@ -33,7 +33,7 @@
         {
             return {
                 pages:1,
-                language:"it-IT",
+                language:null,
                 populars:{
                     page:1,
                     results:[],
@@ -98,8 +98,7 @@
             },
             traduci()
             {
-                console.log("entrato")
-                if(this.language=="it-IT")
+                if(this.$route.query.lang=="it-IT")
                 {
                     console.log("traduzione in italiano")
                     this.profileButton="vai al profilo del film"
@@ -116,7 +115,7 @@
                 else
                 {
                     console.log("traduzione in inglese")
-                    this.profileButton="go to the film profile"
+                    this.profileButton="go to the profile of the film"
                     this.dettagli="was published on: "
                     this.sensibili="shows sensitive results"
                     this.populars={
@@ -165,14 +164,24 @@
         created()
         {
             this.getData()
+            this.traduci()
         },
         watch:
         {
             $route (to, from)
             {
-                console.log("ricevuto")
-                this.language=to.query.lang
-                this.traduci()
+                if(to && to.query && from && from.query) 
+                {
+                    if (to.query.lang==from.query.lang) 
+                    {
+                        return null
+                    }
+                    else
+                    {
+                        this.language=to.query.lang
+                        this.traduci()
+                    }
+                }
             }
         }
     }
