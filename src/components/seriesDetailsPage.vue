@@ -25,31 +25,28 @@
         <font-awesome-icon icon="star-half-stroke" v-else-if="stelle>=3.5"/>
         <font-awesome-icon icon="star" v-if="stelle>=5"/>
         <font-awesome-icon icon="star-half-stroke" v-else-if="stelle>=4.5"/>
-        
-        
-        
-                <br><br>
-                <div class="descrizione">
-                    {{this.serie.overview}}
-                    <br>
-                    {{producer}}
-                    <div v-for="produttore in serie.production_companies" :key="produttore.id">
-                        <img :src="setImmagine(produttore.logo_path)" :alt="this.disponibilità" class="logo">
+        <br><br>
+        <div class="descrizione">
+            {{this.serie.overview}}
+            <br>
+            {{producer}}
+            <div v-for="produttore in serie.production_companies" :key="produttore.id">
+                <img :src="setImmagine(produttore.logo_path)" :alt="this.disponibilità" class="logo">
                         {{produttore.name}}
-                    </div>
-                    <br>
-                    {{genere}}
-                    <div v-for="genere in serie.genres" :key="genere.id">
-                        {{genere.name}}
-                    </div>
-                </div>
+            </div>
+            <br>
+            {{genere}}
+            <div v-for="genere in serie.genres" :key="genere.id">
+                {{genere.name}}
+            </div>
+        </div>
     </div>
-            <div class="backdrop">
-                <img :src="setImmagine(this.backdropPath)" alt="" class="immagine">
-            </div>
-            <div class="poster">
-                <img :src="setImmagine(this.imagePath)" alt="" class="immagine">
-            </div>
+    <div class="backdrop">
+        <img :src="setImmagine(this.backdropPath)" alt="" class="immagine">
+    </div>
+    <div class="poster">
+        <img :src="setImmagine(this.imagePath)" alt="" class="immagine">
+    </div>
 </template>
 
 <script>
